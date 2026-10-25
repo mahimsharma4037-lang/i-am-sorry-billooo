@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm So Sorry Billoo ❤️</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for cute typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <!-- FontAwesome for cute icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pastelPink: '#FFE5EC',
+                        softRose: '#FFB3C1',
+                        accentPink: '#FF758F',
+                        deepRose: '#C9184A',
+                        warmCream: '#FFF0F3',
+                        teddyBrown: '#8D5B4C',
+                        teddyLight: '#B07D62',
+                        teddyDark: '#63372C',
+                    },
+                    fontFamily: {
+                        cute: ['Fredoka', 'sans-serif'],
+                        cursive: ['Pacifico', 'cursive'],
+                        body: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #FFE5EC 0%, #FFC2D1 50%, #FFB3C1 100%);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Floating background elements */
+        .bg-heart {
+            position: absolute;
+            pointer-events: none;
+            animation: floatUp linear infinite;
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.7;
+            }
+            80% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Slide Transitions */
+        .slide {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        /* Teddy Bear Animations */
+        @keyframes tearDrop {
+            0% { transform: translateY(0) scale(1); opacity: 0.9; }
+            80% { opacity: 0.9; }
+            100% { transform: translateY(22px) scale(0.3); opacity: 0; }
+        }
+
+        .tear {
+            animation: tearDrop 1.8s infinite ease-in;
+        }
+
+        @keyframes gentleSway {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        .sway {
+            animation: gentleSway 3s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 8px 15px rgba(201, 24, 74, 0.3)); }
+            50% { transform: scale(1.04); filter: drop-shadow(0 12px 22px rgba(201, 24, 74, 0.5)); }
+        }
+
+        .pulse-heart {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes bounceHeart {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.1); }
+        }
+
+        .bounce-heart {
+            animation: bounceHeart 1.5s ease-in-out infinite;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px rgba(255, 117, 143, 0.25);
+        }
+
+        /* Custom Scrollbar for note */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #FFE5EC;
+            border-radius: 10px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #FF758F;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col justify-between items-center min-h-screen select-none overflow-hidden">
+
+    <!-- Floating Background Hearts Container -->
+    <div id="bgHearts" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+    <!-- Main Content Container -->
+    <main class="relative w-full max-w-4xl h-[82vh] my-auto flex items-center justify-center z-10 px-4">
+        
+        <!-- ================= SLIDE 1 ================= -->
+        <section id="slide-1" class="slide active">
+            <div class="flex flex-col items-center justify-center text-center w-full max-w-2xl">
+                <!-- Text Only: clean "sorryyy" heading and nothing else -->
+                <h1 class="font-cute font-bold text-6xl sm:text-7xl md:text-8xl text-deepRose tracking-wide drop-shadow-md leading-tight">
+                    sorryyy
+                </h1>
+            </div>
+        </section>
+
+        <!-- ================= SLIDE 2 ================= -->
+        <section id="slide-2" class="slide">
+            <div class="glass-card w-full max-w-2xl rounded-3xl p-6 sm:p-8 md:p-10 text-center relative overflow-hidden flex flex-col items-center border border-white/60">
+                <!-- Decorative Top Icon -->
+                <div class="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center text-deepRose text-xl mb-4 shadow-inner">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                </div>
+
+                <!-- Heart-touching Note Container -->
+                <div class="w-full max-h-[50vh] overflow-y-auto custom-scroll pr-2 text-left sm:text-center">
+                    <p class="font-body text-slate-800 text-base sm:text-lg md:text-xl leading-relaxed sm:leading-loose whitespace-pre-line font-medium">
+i am soorryyy billooo yrrr pllsss kasam see mai tujhe kabhi dukhi ya naraz nai karna chahta hu but meri harkate h hi gadhe wali tujhe sehna padta h but mai aaj ke baad puri kosis karunga ki aisa kabhi na ho aur tho aur mai tujhe nai rokta yrr maine wo msg khali wo bad dream aaya tha uss baat ke liye likha tha aur koi intention ni tha uss msg me but tu wo tere friend ki baat lee baith gayi yrr tu kar bindasss baat usse mai tujhe aaj ke baad kabhi nai tokunga tujhe sorrryyy pllsss
+i am seriously sorrryyy yrrr
+                    </p>
+                </div>
+
+                <!-- Little Cute Paw Print Deco -->
+                <div class="mt-4 flex justify-center gap-2 text-accentPink/60 text-sm">
+                    <i class="fa-solid fa-paw"></i>
+                    <i class="fa-solid fa-heart"></i>
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SLIDE 3 ================= -->
+        <section id="slide-3" class="slide">
+            <div class="flex flex-col items-center justify-center text-center gap-6">
+                
+                <!-- Big prominent "I Love You ❤️" -->
+                <h1 class="font-cute font-bold text-5xl sm:text-6xl md:text-7xl text-deepRose tracking-wide drop-shadow-lg pulse-heart">
+                    I Love You ❤️
+                </h1>
+
+                <!-- Cute Happy Teddy Bear SVG -->
+                <div class="sway w-56 h-56 md:w-72 md:h-72 drop-shadow-2xl my-2 relative">
+                    <svg viewBox="0 0 200 200" class="w-full h-full">
+                        <!-- Ears -->
+                        <circle cx="45" cy="45" r="28" fill="#8D5B4C"/>
+                        <circle cx="45" cy="45" r="16" fill="#FFB3C1"/>
+                        <circle cx="155" cy="45" r="28" fill="#8D5B4C"/>
+                        <circle cx="155" cy="45" r="16" fill="#FFB3C1"/>
+                        
+                        <!-- Head -->
+                        <circle cx="100" cy="95" r="65" fill="#8D5B4C"/>
+                        
+                        <!-- Inner Face / Snout -->
+                        <ellipse cx="100" cy="110" rx="32" ry="24" fill="#FFF0F3"/>
+                        
+                        <!-- Cute Happy Nose -->
+                        <path d="M 90 98 Q 100 90 110 98 Q 105 108 100 108 Q 95 108 90 98 Z" fill="#63372C"/>
+                        
+                        <!-- Big Happy Smile with Tongue -->
+                        <path d="M 82 112 Q 100 135 118 112" stroke="#63372C" stroke-width="4" stroke-linecap="round" fill="none"/>
+                        
+                        <!-- Cheerful Sparkle Eyes -->
+                        <!-- Left Eye -->
+                        <ellipse cx="70" cy="85" rx="8" ry="10" fill="#2B1810"/>
+                        <circle cx="67" cy="81" r="3.5" fill="#FFFFFF"/>
+                        <circle cx="73" cy="88" r="1.5" fill="#FFFFFF"/>
+                        <!-- Right Eye -->
+                        <ellipse cx="130" cy="85" rx="8" ry="10" fill="#2B1810"/>
+                        <circle cx="127" cy="81" r="3.5" fill="#FFFFFF"/>
+                        <circle cx="133" cy="88" r="1.5" fill="#FFFFFF"/>
+                        
+                        <!-- Bright Rosy Cheeks -->
+                        <ellipse cx="58" cy="100" rx="12" ry="8" fill="#FF758F" opacity="0.6"/>
+                        <ellipse cx="142" cy="100" rx="12" ry="8" fill="#FF758F" opacity="0.6"/>
+
+                        <!-- Teddy Holding Big Red Heart -->
+                        <path d="M 100 180 C 100 180 60 140 60 120 C 60 105 75 95 90 105 C 100 115 100 115 100 115 C 100 115 100 115 110 105 C 125 95 140 105 140 120 C 140 140 100 180 100 180 Z" fill="#C9184A" class="pulse-heart"/>
+                        
+                        <!-- Cute Paws holding heart -->
+                        <circle cx="68" cy="135" r="14" fill="#8D5B4C"/>
+                        <circle cx="68" cy="135" r="8" fill="#B07D62"/>
+                        <circle cx="132" cy="135" r="14" fill="#8D5B4C"/>
+                        <circle cx="132" cy="135" r="8" fill="#B07D62"/>
+                    </svg>
+
+                    <!-- Cute Speech Bubble -->
+                    <div class="absolute -top-4 -right-2 bg-white text-deepRose font-cute font-bold text-sm sm:text-base px-4 py-2 rounded-2xl shadow-lg border-2 border-accentPink animate-bounce flex items-center gap-1">
+                        <span>I love you!</span>
+                        <i class="fa-solid fa-heart text-accentPink"></i>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar & Slide Indicators -->
+    <footer class="relative z-20 mb-6 flex flex-col items-center gap-4 w-full px-4">
+        
+        <!-- Interactive Navigation Buttons -->
+        <div class="flex items-center gap-4 sm:gap-6">
+            <!-- Back Button -->
+            <button id="prevBtn" onclick="changeSlide(-1)" class="opacity-50 pointer-events-none bg-white/80 hover:bg-white text-deepRose font-cute font-semibold text-sm sm:text-base px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 border border-pink-200 active:scale-95">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+                <span>Back</span>
+            </button>
+
+            <!-- Slide Dot Indicators -->
+            <div class="flex items-center gap-2 sm:gap-3 bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/60 shadow-inner">
+                <button onclick="goToSlide(0)" class="dot w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-deepRose transition-all duration-300 transform scale-125"></button>
+                <button onclick="goToSlide(1)" class="dot w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-accentPink/40 hover:bg-accentPink transition-all duration-300"></button>
+                <button onclick="goToSlide(2)" class="dot w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-accentPink/40 hover:bg-accentPink transition-all duration-300"></button>
+            </div>
+
+            <!-- Next Button -->
+            <button id="nextBtn" onclick="changeSlide(1)" class="bg-deepRose hover:bg-rose-700 text-white font-cute font-semibold text-sm sm:text-base px-6 py-2.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 active:scale-95">
+                <span>Next</span>
+                <i class="fa-solid fa-heart text-xs"></i>
+            </button>
+        </div>
+
+        <p class="text-xs font-semibold text-rose-700/60 font-body">
+            Made with love for Billoo ❤️
+        </p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 3;
+        const slides = [
+            document.getElementById('slide-1'),
+            document.getElementById('slide-2'),
+            document.getElementById('slide-3')
+        ];
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Update Slide Display
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Update Dot Indicators
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.className = "dot w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-deepRose transition-all duration-300 transform scale-125 shadow-sm";
+                } else {
+                    dot.className = "dot w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-accentPink/40 hover:bg-accentPink transition-all duration-300";
+                }
+            });
+
+            // Button States
+            if (currentSlide === 0) {
+                prevBtn.classList.add('opacity-50', 'pointer-events-none');
+            } else {
+                prevBtn.classList.remove('opacity-50', 'pointer-events-none');
+            }
+
+            if (currentSlide === totalSlides - 1) {
+                nextBtn.innerHTML = '<span>Love You!</span> <i class="fa-solid fa-heart text-xs"></i>';
+                triggerConfetti();
+            } else {
+                nextBtn.innerHTML = '<span>Next</span> <i class="fa-solid fa-heart text-xs"></i>';
+            }
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateSlides();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlides();
+        }
+
+        // Floating Hearts Background Generator
+        function createFloatingHearts() {
+            const container = document.getElementById('bgHearts');
+            const heartIcons = ['fa-heart', 'fa-sparkles', 'fa-paw'];
+            const count = 18;
+
+            for (let i = 0; i < count; i++) {
+                const heart = document.createElement('i');
+                const randomIcon = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                
+                heart.className = `fa-solid ${randomIcon} bg-heart text-pink-300/50`;
+                
+                // Random positioning and dimensions
+                const size = Math.random() * 20 + 12; // 12px - 32px
+                const left = Math.random() * 100; // 0% - 100%
+                const duration = Math.random() * 10 + 8; // 8s - 18s
+                const delay = Math.random() * 10; // 0s - 10s
+
+                heart.style.fontSize = `${size}px`;
+                heart.style.left = `${left}%`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.animationDelay = `${delay}s`;
+
+                container.appendChild(heart);
+            }
+        }
+
+        // Trigger Confetti on Slide 3
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                // First Burst
+                confetti({
+                    particleCount: 70,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FF758F', '#FFB3C1', '#C9184A', '#FFFFFF']
+                });
+
+                // Heart Burst
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 30,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#FF758F', '#FFB3C1', '#C9184A']
+                    });
+                    confetti({
+                        particleCount: 30,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#FF758F', '#FFB3C1', '#C9184A']
+                    });
+                }, 250);
+            }
+        }
+
+        // Initialize Touch Swiping support for Mobile devices
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swiped Left -> Next
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                // Swiped Right -> Prev
+                if (currentSlide > 0) changeSlide(-1);
+            }
+        }
+
+        // Keyboard Arrow Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) changeSlide(-1);
+            }
+        });
+
+        // Window Load Initialization
+        window.onload = function() {
+            createFloatingHearts();
+            updateSlides();
+        };
+    </script>
+</body>
+</html>
